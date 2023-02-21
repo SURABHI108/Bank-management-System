@@ -1,0 +1,57 @@
+while true; do
+    echo "Bank Management System"
+    echo "1. Create New Account"
+    echo "2. Deposit Money"
+    echo "3. Withdraw Money"
+    echo "4. Check Balance"
+    echo "5. Exit"
+
+    read -p "Enter your choice: " choice
+
+    case $choice in
+        1)
+            read -p "Enter your name: " name
+            read -p "Enter your account number: " account_num
+            read -p "Enter initial deposit: " deposit
+
+            echo "$name:$account_num:$deposit" >> customers.txt
+            echo "Account created successfully"
+            ;;
+        2)
+            read -p "Enter account number: " account_num
+            read -p "Enter deposit amount: " deposit
+
+            sed -i "/^$account_num:/s/\$/+$deposit/" customers.txt
+            echo "Deposit successful"
+            ;;
+        3)
+            read -p "Enter account number: " account_num
+            read -p "Enter withdrawal amount: " withdrawal
+
+            balance=$(grep "^$account_num:" customers.txt | cut -d ":" -f 3)
+            if [ $balance -lt $withdrawal ]; then
+                echo "Insufficient balance"
+            else
+                sed -i "/^$account_num:/s/\$/$((-1 * $withdrawal))/" customers.txt
+                echo "Withdrawal successful"
+            fi
+            ;;
+        4)
+            read -p "Enter account number: " account_num
+            balance=$(grep "^$account_num:" customers.txt | cut -d ":" -f 3)
+            echo "Your balance is: $balance"
+            ;;
+        5)
+            echo "Thank you for using our bank management system"
+            exit
+            ;;
+        *)
+            echo "Invalid choice"
+            ;;
+    esac
+done
+Note that this is just a basic example and you may need to add more features and error handling to make it more robust and secure.
+
+
+
+
